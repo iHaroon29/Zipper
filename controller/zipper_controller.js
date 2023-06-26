@@ -25,13 +25,12 @@ const compressSingle = async (req, res, next) => {
       zipInstance,
       fs.createWriteStream(`./temp/downloads/${fileName}.zip`)
     )
-    if (flag) {
+    if (Boolean(flag)) {
       const resp = await deleteFile(`./temp/uploads/${tokenResp.data}/${path}`)
       if (resp instanceof Error) throw resp
     }
     res.status(200).send({
       fileName: `${fileName}.zip`,
-      accessPoint: `http://localhost:8000/files?fileName=${fileName}.zip`,
     })
   } catch (e) {
     return next(e)
@@ -66,7 +65,6 @@ const compressAll = async (req, res, next) => {
     }
     res.status(200).send({
       fileName: `${fileName}.zip`,
-      accessPoint: `http://localhost:8000/files?fileName=${fileName}.zip`,
     })
   } catch (e) {
     return next(e)

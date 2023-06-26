@@ -9,13 +9,13 @@ const upload = multer({
   storage: initMulter(),
   fileFilter: async (req, file, cb) => await filterFile(req, file, cb),
   limits: {
-    fileSize: 1024 * 1024,
+    fileSize: 1024 * 1024 * 2,
   },
 })
 
 const router = Router()
 
-router.route('/').get((req, res, next) => res.status(200).send('Hello World'))
+router.route('/ping').get((req, res, next) => res.status(200).send('Pong'))
 router.route('/token').get(authenticateUser)
 router
   .route('/compress?')
