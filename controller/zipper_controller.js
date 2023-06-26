@@ -26,7 +26,7 @@ const compressSingle = async (req, res, next) => {
       fs.createWriteStream(`./temp/downloads/${fileName}.zip`)
     )
     if (flag) {
-      const resp = await deleteFile(`./temp/uploads/${data}/${path}`)
+      const resp = await deleteFile(`./temp/uploads/${tokenResp.data}/${path}`)
       if (resp instanceof Error) throw resp
     }
     res.status(200).send({
