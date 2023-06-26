@@ -46,4 +46,8 @@ app.route('*').get((req, res, next) => {
   res.status(404).send('What??')
 })
 
+app.listen(process.env.PORT, () => {
+  console.log(`Listening on port-${process.env.PORT}`)
+})
+
 export default app
