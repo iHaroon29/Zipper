@@ -15,6 +15,7 @@ const upload = multer({
 
 const router = Router()
 
+router.route('/').get((req, res, next) => res.status(200).send('Hello World'))
 router.route('/token').get(authenticateUser)
 router
   .route('/compress?')
