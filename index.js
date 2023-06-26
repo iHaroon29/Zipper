@@ -1,8 +1,8 @@
 import http from 'http'
 import app from './app.js'
 import cluster from 'cluster'
-import { availableParallelism } from 'os'
 import fs from 'fs'
+// import { availableParallelism } from 'os'
 
 const port = process.env.PORT || 8000
 const appEnv = process.env.nodeEnv
