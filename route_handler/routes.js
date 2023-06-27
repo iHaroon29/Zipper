@@ -21,7 +21,7 @@ const upload = multer({
 
 const router = Router()
 
-router.route('/ping').get((req, res, next) => res.status(200))
+router.route('/ping').get((req, res, next) => res.status(200).send('OK'))
 router.route('/token').get(authenticateUser)
 router
   .route('/compress?')
