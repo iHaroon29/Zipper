@@ -1,19 +1,22 @@
 import fs from 'fs'
-import path from 'path'
-import multer from 'multer'
-import { decodeToken } from './jwt_utils.js'
 
-const readFile = async () => {
+const readFile = async (path, output) => {
   try {
+    const readStream = fs.createReadStream(path)
+    readStream.pipe(output)
   } catch (e) {
     console.log(e.message)
   }
 }
 
-const writeFile = async () => {
+const writeFile = async (path, data) => {
   try {
+    const writeStream = fs.createWriteStream(path)
+    writeStream.write(data, (e) => {
+      if (e) throw e
+    })
   } catch (e) {
-    console.log(e.message)
+    return e
   }
 }
 
@@ -29,62 +32,4 @@ const deleteFile = async (path) => {
   }
 }
 
-const initMulter = () => {
-  try {
-    const validateFolder = async (token) => {
-      const tokenData = await decodeToken(token)
-      if (!fs.existsSync(`./temp/uploads/${tokenData.data}`)) {
-        fs.mkdirSync(`./temp/uploads/${tokenData.data}`)
-      }
-      return tokenData
-    }
-    const instance = multer.diskStorage({
-      destination: async (req, file, cb) => {
-        const { token } = req.cookies
-        const tokenData = await validateFolder(token)
-        cb(null, `./temp/uploads/${tokenData.data}`)
-      },
-      filename: (req, file, cb) => {
-        cb(null, file.originalname)
-      },
-    })
-    return instance
-  } catch (e) {
-    console.log(e.message)
-  }
-}
-
-const filterFile = async (req, file, cb) => {
-  try {
-    const ext = path.extname(file.originalname)
-    if (
-      ext !== '.png' &&
-      ext !== '.jpg' &&
-      ext !== '.gif' &&
-      ext !== '.jpeg' &&
-      ext !== '.pdf' &&
-      ext !== '.txt'
-    ) {
-      return cb(new Error('Invalid File Extension'))
-    }
-    cb(null, true)
-  } catch (e) {
-    console.log(e.message)
-  }
-}
-
-const updateFileName = async () => {
-  try {
-  } catch (e) {
-    console.log(e.message)
-  }
-}
-
-export {
-  readFile,
-  writeFile,
-  deleteFile,
-  updateFileName,
-  initMulter,
-  filterFile,
-}
+export { readFile, writeFile, deleteFile }

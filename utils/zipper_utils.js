@@ -21,7 +21,10 @@ const appendFileToArchive = async (instance, path, fileName) => {
 const generateZipFile = async (instance, outPath, compressionLevel = 9) => {
   try {
     instance
-      .generateNodeStream({ compresstionOptions: { level: compressionLevel } })
+      .generateNodeStream({
+        compression: 'DEFLATE',
+        compresstionOptions: { level: compressionLevel },
+      })
       .pipe(outPath)
       .on('error', (e) => console.log(e.message))
   } catch (e) {
