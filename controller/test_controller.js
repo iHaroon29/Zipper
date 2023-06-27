@@ -20,9 +20,6 @@ const testGenerate = async (req, res, next) => {
     const zipInstance = await initiateZipInstance()
     await appendFileToArchive(zipInstance, `./test.txt`, 'test')
     await generateZipFile(zipInstance, fs.createWriteStream(`./test.zip`))
-    if (!fs.existsSync('./test.zip')) {
-      throw new Error('Zip File not created!')
-    }
     res.status(200).send({ message: 'OK' })
   } catch (e) {
     next(e)
@@ -35,8 +32,8 @@ const testVitals = async (req, res, next) => {
     const zipSize = fs.statSync('./test.zip', { throwIfNoEntry: true }).size
     return res.status(200).send({
       message: 'OK',
-      fileSize: fileSize / (1024 * 1024),
-      zipSize: zipSize / (1024 * 1024),
+      fileSize: fileSize / (1024 * 1024) + 'mb',
+      zipSize: zipSize / (1024 * 1024) + 'mb',
     })
   } catch (e) {
     next(e)
@@ -60,9 +57,13 @@ const testDelete = async (req, res, next) => {
 }
 
 const testDownload = async (req, res, next) => {
-  res.download('./test.zip', (e) => {
-    if (e) next(e)
-  })
+  try {
+    res.download('./test.zip', (e) => {
+      if (e) next(e)
+    })
+  } catch (e) {
+    next(e)
+  }
 }
 
 export { testGenerate, testDownload, testVitals, testDelete }

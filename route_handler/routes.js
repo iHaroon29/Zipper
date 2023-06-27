@@ -11,6 +11,7 @@ import {
   testDelete,
 } from '../controller/test_controller.js'
 
+// Multer Config
 const upload = multer({
   storage: initMulter(),
   fileFilter: async (req, file, cb) => await filterFile(req, file, cb),
@@ -19,8 +20,10 @@ const upload = multer({
   },
 })
 
+// Router Instansiation
 const router = Router()
 
+// Zipper API
 router.route('/ping').get((req, res, next) => res.status(200).send('OK'))
 router.route('/token').get(authenticateUser)
 router
@@ -30,6 +33,8 @@ router
   .route('/compress/all')
   .post(verifyUser, upload.array('upload', 10), compressAll)
 router.route('/files?').get(downloadFile)
+
+// Test API
 router.route('/test/generate').get(testGenerate)
 router.route('/test/vitals').get(testVitals)
 router.route('/test/download').get(testDownload)
