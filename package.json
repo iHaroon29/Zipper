@@ -7,13 +7,16 @@
   "scripts": {
     "test": "mocha",
     "devWin": "SET nodeEnv=development& nodemon index.js",
-    "file": "nodemon fileServer.js",
-    "prodWin": "SET nodeEnv=production& node index.js"
+    "prodWin": "SET nodeEnv=production& node index.js",
+    "devLinux": "nodeEnv=production& nodemon index.js"
   },
   "keywords": [
     "nodejs",
     "javascript"
   ],
+  "engines": {
+    "node": ">=18 <20"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
