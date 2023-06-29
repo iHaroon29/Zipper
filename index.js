@@ -7,6 +7,20 @@ import { availableParallelism } from 'os'
 const port = process.env.PORT || 8000
 const appEnv = process.env.nodeEnv
 
+if (!fs.existsSync('./temp')) {
+  fs.mkdir('./temp', (e) => {
+    if (e) console.log(e.message)
+    fs.mkdir('./temp/uploads', (e) => {
+      if (e) console.log(e.message)
+      console.log('Uploads Folder Created')
+    })
+    fs.mkdir('./temp/downloads', (e) => {
+      if (e) console.log(e.message)
+      console.log('Downloads Folder Created')
+    })
+  })
+}
+
 if (appEnv === 'production') {
   const numCPU = availableParallelism()
   if (cluster.isPrimary) {
@@ -20,19 +34,6 @@ if (appEnv === 'production') {
   } else {
     const server = http.createServer(app)
     server.listen(port)
-    if (!fs.existsSync('./temp')) {
-      fs.mkdir('./temp', (e) => {
-        if (e) console.log(e.message)
-        fs.mkdir('./temp/uploads', (e) => {
-          if (e) console.log(e.message)
-          console.log('Uploads Folder Created')
-        })
-        fs.mkdir('./temp/downloads', (e) => {
-          if (e) console.log(e.message)
-          console.log('Downloads Folder Created')
-        })
-      })
-    }
     server.on('listening', () => console.log(`Listening on ${port}`))
     server.on('close', () => console.log('Server Shutting Down!'))
     server.on('error', (e) => console.log(e.message))
@@ -40,19 +41,6 @@ if (appEnv === 'production') {
   }
 } else {
   const server = http.createServer(app)
-  if (!fs.existsSync('./temp')) {
-    fs.mkdir('./temp', (e) => {
-      if (e) console.log(e.message)
-      fs.mkdir('./temp/uploads', (e) => {
-        if (e) console.log(e.message)
-        console.log('Uploads Folder Created')
-      })
-      fs.mkdir('./temp/downloads', (e) => {
-        if (e) console.log(e.message)
-        console.log('Downloads Folder Created')
-      })
-    })
-  }
   server.listen(port)
   server.on('listening', () => console.log(`Listening on ${port}`))
   server.on('close', () => console.log('Server Shutting Down!'))
