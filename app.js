@@ -37,13 +37,14 @@ app.use((err, req, res, next) => {
 })
 
 app.use(router)
+app.use('/home', express.static('./index.html'))
 
 app.use((err, req, res, next) => {
   res.status(500).send({ message: err.message })
 })
 
 app.route('*').get((req, res, next) => {
-  res.status(404).send('What??')
+  res.status(404).send({ message: 'Invalid End-Point' })
 })
 
 export default app

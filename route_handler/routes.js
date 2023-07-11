@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import multer from 'multer'
 import { initMulter, filterFile } from '../utils/multer_utils.js'
-import { compressSingle, compressAll } from '../controller/zipper_controller.js'
+import { compress, decompress } from '../controller/zipper_controller.js'
 import { authenticateUser, verifyUser } from '../controller/auth_controller.js'
 import { downloadFile } from '../controller/download_controller.js'
 import {
@@ -9,6 +9,7 @@ import {
   testDownload,
   testVitals,
   testDelete,
+  cleanup,
 } from '../controller/test_controller.js'
 
 // Multer Config
@@ -27,11 +28,11 @@ const router = Router()
 router.route('/ping').get((req, res, next) => res.status(200).send('OK'))
 router.route('/token').get(authenticateUser)
 router
-  .route('/compress?')
-  .post(verifyUser, upload.single('upload'), compressSingle)
+  .route('/compress')
+  .post(verifyUser, upload.array('upload-compress', 10), compress)
 router
-  .route('/compress/all')
-  .post(verifyUser, upload.array('upload', 10), compressAll)
+  .route('/decompress')
+  .post(verifyUser, upload.single('upload-decompress'), decompress)
 router.route('/files?').get(downloadFile)
 
 // Test API
@@ -39,5 +40,5 @@ router.route('/test/generate').get(testGenerate)
 router.route('/test/vitals').get(testVitals)
 router.route('/test/download').get(testDownload)
 router.route('/test/delete').delete(testDelete)
-
+router.route('/test/clean').get(cleanup)
 export default router

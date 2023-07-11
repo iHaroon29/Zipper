@@ -4,40 +4,12 @@ import {
   appendFileToArchive,
   generateZipFile,
   initiateZipInstance,
+  decompressZip,
 } from '../utils/zipper_utils.js'
 import { deleteFile } from '../utils/fs_utils.js'
 import { generateRandom } from '../utils/crypto_utils.js'
 
-const compressSingle = async (req, res, next) => {
-  try {
-    const { flag } = req.query
-    const zipInstance = await initiateZipInstance()
-    const fileName = await generateRandom()
-    const path = req.file.path.split('\\').slice(-1)[0]
-    const tokenResp = await decodeToken(req.cookies.token)
-    if (tokenResp instanceof Error) throw tokenResp
-    await appendFileToArchive(
-      zipInstance,
-      `./temp/uploads/${tokenResp.data}/${path}`,
-      path
-    )
-    await generateZipFile(
-      zipInstance,
-      fs.createWriteStream(`./temp/downloads/${fileName}.zip`)
-    )
-    if (Boolean(flag)) {
-      const resp = await deleteFile(`./temp/uploads/${tokenResp.data}/${path}`)
-      if (resp instanceof Error) throw resp
-    }
-    res.status(200).send({
-      fileName: `${fileName}.zip`,
-    })
-  } catch (e) {
-    return next(e)
-  }
-}
-
-const compressAll = async (req, res, next) => {
+const compress = async (req, res, next) => {
   try {
     const { flag } = req.query
     const zipInstance = await initiateZipInstance()
@@ -71,18 +43,20 @@ const compressAll = async (req, res, next) => {
   }
 }
 
-const decompressSingle = async (req, res, next) => {
+const decompress = async (req, res, next) => {
   try {
+    const { passwordProtected } = req.query
+    const fileName = req.file.filename.split('.')[0]
+    const { data } = await decodeToken(req.cookies.token)
+    const paths = await decompressZip(
+      req.file.path,
+      `./temp/downloads/${data}/${fileName}`,
+      passwordProtected
+    )
+    res.status(200).send({ paths })
   } catch (e) {
     res.status(500).send({ message: e.message })
   }
 }
 
-const decompressAll = async (req, res, next) => {
-  try {
-  } catch (e) {
-    res.status(500).send({ message: e.message })
-  }
-}
-
-export { compressSingle, compressAll, decompressSingle, decompressAll }
+export { compress, decompress }

@@ -11,7 +11,8 @@ const filterFile = async (req, file, cb) => {
       ext !== '.jpg' &&
       ext !== '.jpeg' &&
       ext !== '.pdf' &&
-      ext !== '.txt'
+      ext !== '.txt' &&
+      ext !== '.zip'
     ) {
       return cb(new Error('Invalid File Extension'))
     }

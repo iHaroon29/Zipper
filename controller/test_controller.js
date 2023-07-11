@@ -66,4 +66,31 @@ const testDownload = async (req, res, next) => {
   }
 }
 
-export { testGenerate, testDownload, testVitals, testDelete }
+const cleanup = async (req, res, next) => {
+  try {
+    fs.readdir('./temp/downloads', { recursive: true }, (e, files) => {
+      if (e) throw e
+      for (let file of files) {
+        fs.rm(`./temp/downloads/${file}`, { recursive: true }, (e) => {
+          if (e) throw e
+          console.log('Finished')
+        })
+      }
+    })
+    fs.readdir('./temp/uploads', { recursive: true }, (e, files) => {
+      if (e) throw e
+      for (let file of files) {
+        fs.rm(`./temp/uploads/${file}`, { recursive: true }, (e) => {
+          if (e) throw e
+          console.log('Finished')
+        })
+      }
+    })
+
+    res.status(200).send('OK')
+  } catch (e) {
+    next(e)
+  }
+}
+
+export { testGenerate, testDownload, testVitals, testDelete, cleanup }
