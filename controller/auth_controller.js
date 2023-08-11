@@ -30,7 +30,7 @@ const verifyUser = async (req, res, next) => {
         maxAge: 60 * 60 * 24,
         httpOnly: true,
         sameSite: 'none',
-        secure: true,
+        secure: false,
       })
     }
     next()

@@ -19,6 +19,17 @@ if (!fs.existsSync('./temp')) {
       console.log('Downloads Folder Created')
     })
   })
+} else {
+  !fs.existsSync('./temp/uploads')
+    ? fs.mkdir('./temp/uploads', (e) => {
+        if (e) console.log(e)
+      })
+    : null
+  !fs.existsSync('./temp/downloads')
+    ? fs.mkdir('./temp/downloads', (e) => {
+        if (e) console.log(e)
+      })
+    : null
 }
 
 if (appEnv === 'production') {

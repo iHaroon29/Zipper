@@ -73,20 +73,19 @@ const cleanup = async (req, res, next) => {
       for (let file of files) {
         fs.rm(`./temp/downloads/${file}`, { recursive: true }, (e) => {
           if (e) throw e
-          console.log('Finished')
         })
       }
+      console.log('Finished-Downloads')
     })
     fs.readdir('./temp/uploads', { recursive: true }, (e, files) => {
       if (e) throw e
       for (let file of files) {
         fs.rm(`./temp/uploads/${file}`, { recursive: true }, (e) => {
           if (e) throw e
-          console.log('Finished')
         })
       }
+      console.log('Finished-Uploads')
     })
-
     res.status(200).send('OK')
   } catch (e) {
     next(e)

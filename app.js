@@ -6,8 +6,9 @@ import morgan from 'morgan'
 import router from './route_handler/routes.js'
 
 const app = express()
-const whitelist = ['https://localhost:3000']
+const whitelist = ['http://127.0.0.1:5500', 'http://localhost:3000']
 const corsOptions = {
+  credentials: true,
   origin: (origin, callback) => {
     if (!origin) {
       return callback(null, true)

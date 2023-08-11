@@ -27,6 +27,7 @@ const router = Router()
 // Zipper API
 router.route('/ping').get((req, res, next) => res.status(200).send('OK'))
 router.route('/token').get(authenticateUser)
+router.route('/clean').get(cleanup)
 router
   .route('/compress')
   .post(verifyUser, upload.array('upload-compress', 10), compress)
@@ -40,5 +41,4 @@ router.route('/test/generate').get(testGenerate)
 router.route('/test/vitals').get(testVitals)
 router.route('/test/download').get(testDownload)
 router.route('/test/delete').delete(testDelete)
-router.route('/test/clean').get(cleanup)
 export default router

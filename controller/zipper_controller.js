@@ -23,15 +23,19 @@ const compress = async (req, res, next) => {
         path
       )
     }
+    if (!fs.existsSync(`./temp/downloads/${data}`)) {
+      fs.mkdirSync(`./temp/downloads/${data}`)
+    }
     await generateZipFile(
       zipInstance,
-      fs.createWriteStream(`./temp/downloads/${fileName}.zip`),
+      fs.createWriteStream(`./temp/downloads/${data}/${fileName}.zip`),
       9
     )
-    if (flag) {
+
+    if (flag === 'true') {
       for (let file of req.files) {
         const path = file.path.split('\\').slice(-1)[0]
-        const resp = await deleteFile(path)
+        const resp = await deleteFile(`./temp/uploads/${data}/${path}`)
         if (resp instanceof Error) throw resp
       }
     }
